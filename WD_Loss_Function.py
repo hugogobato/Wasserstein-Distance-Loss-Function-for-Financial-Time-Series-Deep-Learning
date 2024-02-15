@@ -122,5 +122,8 @@ class MSE_2DWD(BasePointLoss):
           dgm2 = rips.fit_transform(y[:,int(y_hat.shape[1]/2*i):int(y_hat.shape[1]/2*(i+1))].detach().numpy())
           wasserstein_dists[i] = persim.wasserstein(dgm1[0], dgm2[0], matching=False)
 
-        losses = torch.sum((y - y_hat) ** 2)/(y_hat.shape[0]*y_hat.shape[1]) + torch.tensor((np.sum(wasserstein_dists))/n)
+        alpha=0.5
+        beta=0.5
+
+        losses = alpha*torch.sum((y - y_hat) ** 2)/(y_hat.shape[0]*y_hat.shape[1]) + beta*torch.tensor((np.sum(wasserstein_dists))/n)
         return losses
