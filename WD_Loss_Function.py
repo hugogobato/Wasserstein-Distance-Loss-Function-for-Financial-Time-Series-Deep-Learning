@@ -1,7 +1,3 @@
-!pip install neuralforecast
-
-!pip install ripser
-
 from ripser import Rips
 import persim
 
@@ -116,6 +112,13 @@ class MSE_2DWD(BasePointLoss):
         rips = Rips(maxdim = 2, verbose=False)
         n=2
         wasserstein_dists = np.zeros((n))
+
+        if torch.cuda.is_available() == True:
+            y_hat=torch.Tensor.cpu(y_hat)
+            y=torch.Tensor.cpu(y)
+        else:
+            y_hat=y_hat
+            y=y
 
         for i in range(2):
           dgm1 = rips.fit_transform(y_hat[:,int(y_hat.shape[1]/2*i):int(y_hat.shape[1]/2*(i+1))].detach().numpy())
